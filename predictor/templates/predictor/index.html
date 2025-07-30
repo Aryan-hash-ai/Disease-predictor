@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Disease Predictor</title>
+    <link rel="stylesheet" href="{% static 'predictor/css/style.css' %}">
+    <style>
+        /* Enhanced Styles for Clean and Professional Look (Inline for demonstration) */
+        /* In a real project, consider moving these to style.css */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            width: 100%;
+            max-width: 960px;
+            animation: fadeIn 0.5s ease-out; /* Animation on load */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: #007bff; /* Primary blue for headings */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        p {
+            color: #6c757d; /* Muted text color */
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .message.loading {
+            background-color: #e3f2fd; /* Light blue */
+            color: #1e88e5; /* Darker blue */
+            border: 1px solid #bbdefb;
+        }
+
+        .message.error {
+            background-color: #ffebee; /* Light red */
+            color: #e53935; /* Darker red */
+            border: 1px solid #f48fb1;
+        }
+
+        .symptom-selection {
+            margin-bottom: 35px;
+            border-top: 1px solid #dee2e6; /* Light grey separator */
+            padding-top: 30px;
+        }
+
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid */
+            gap: 15px;
+            padding: 20px;
+            background-color: #f8f9fa; /* Light grey background for the grid */
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .symptom-item {
+            background-color: #fff;
+            border: 1px solid #ced4da; /* Light border */
+            border-radius: 6px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out; /* Hover animations */
+            text-align: center;
+            font-size: 0.9rem;
+            color: #495057;
+            user-select: none; /* Prevent text selection */
+        }
+
+        .symptom-item:hover {
+            transform: scale(1.05); /* Slightly enlarge on hover */
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05); /* Subtle shadow on hover */
+        }
+
+        .symptom-item.selected {
+            background-color: #28a745; /* Green for selected */
+            color: #fff;
+            border-color: #28a745;
+            box-shadow: 0 0.25rem 0.5rem rgba(40, 167, 69, 0.2); /* Green shadow for selected */
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0; /* Center the button */
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+            background-color: #007bff; /* Primary blue button */
+            border: 1px solid #007bff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-2px); /* Lift button on hover */
+        }
+
+        .btn:disabled {
+            background-color: #e9ecef;
+            color: #adb5bd;
+            border-color: #ced4da;
+            cursor: not-allowed;
+        }
+
+        .btn.reset {
+            background-color: #6c757d; /* Grey reset button */
+            border-color: #6c757d;
+        }
+
+        .btn.reset:hover:not(:disabled) {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+
+        .result-area {
+            background-color: #e7f8ff; /* Light blue for results */
+            border: 1px solid #bde0fe;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 35px;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.08);
+            animation: slideInDown 0.4s ease-out; /* Animation when results appear */
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-area h2 {
+            color: #17a2b8; /* Teal for result heading */
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .result-area p {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #495057;
+        }
+
+        .result-area p strong {
+            color: #343a40;
+            min-width: 140px; /* Align text better */
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <h1> Smart Disease Predictor</h1>
+        <p>Select your symptoms below to get a potential disease prediction.</p>
+
+        <div id="loadingSymptoms" class="message loading" style="display: none;">Loading symptoms...</div>
+        <div id="errorSymptoms" class="message error" style="display: none;">Failed to load symptoms. Please try again later.</div>
+
+        <div class="symptom-selection">
+            <h2>Select Your Symptoms:</h2>
+            <div id="symptomsList" class="symptom-grid">
+                <p>No symptoms available. Please contact support.</p>
+            </div>
+            <button id="predictBtn" class="btn" disabled>Get Prediction</button>
+        </div>
+
+        <div id="loadingPrediction" class="message loading" style="display: none;">Predicting disease...</div>
+        <div id="errorPrediction" class="message error" style="display: none;">Prediction failed. Please try again.</div>
+
+        <div id="predictionResult" class="result-area" style="display: none;">
+            <h2>Prediction Result:</h2>
+            <p><strong>Predicted Disease:</strong> <span id="predictedDisease"></span></p>
+            <p><strong>Confidence Score:</strong> <span id="confidenceScore"></span></p>
+            <p><strong>Suggestions:</strong> <span id="suggestions"></span></p>
+            <button id="resetBtn" class="btn reset">Reset</button>
+        </div>
+
+        <div class="footer">
+            <p>Disclaimer: This prediction is for informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of a qualified health provider with any questions you may have regarding a medical condition.</p>
+        </div>
+    </div>
+
+    {# Link to our JavaScript file #}
+    <script src="{% static 'predictor/js/main.js' %}"></script>
+</body>
+</html>
