@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.ipynb_checkpoints
+.mypy_cache/
+.pytest_cache/
+.vscode/ # If you use VS Code
+
+# Django
+db.sqlite3
+/media
+/static/
+staticfiles/ # Django collectstatic folder
+
+# OS
+.DS_Store
+.env
