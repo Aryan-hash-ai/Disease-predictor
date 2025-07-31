@@ -1,4 +1,4 @@
-# disease_predictor_project/predictor/views.py
+
 
 from django.shortcuts import render
 from rest_framework import generics, status

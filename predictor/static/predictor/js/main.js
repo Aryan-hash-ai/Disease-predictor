@@ -1,4 +1,4 @@
-// disease_predictor_project/static/predictor/js/main.js
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const symptomsListDiv = document.getElementById('symptomsList');

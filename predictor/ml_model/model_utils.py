@@ -1,4 +1,4 @@
-# disease_predictor_project/predictor/ml_model/model_utils.py
+
 
 import os
 import pickle

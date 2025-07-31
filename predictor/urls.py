@@ -1,4 +1,4 @@
-# disease_predictor_project/predictor/urls.py
+
 
 from django.urls import path
 from . import views

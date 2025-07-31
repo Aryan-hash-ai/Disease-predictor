@@ -1,4 +1,4 @@
-# disease_predictor_project/predictor/models.py
+
 
 from django.db import models
 

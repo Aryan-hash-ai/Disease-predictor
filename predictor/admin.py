@@ -1,4 +1,4 @@
-# disease_predictor_project/predictor/admin.py
+
 
 from django.contrib import admin
 from .models import Symptom
